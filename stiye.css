@@ -1,0 +1,213 @@
+/* =====================================================
+   VARIÁVEIS – IDENTIDADE VISUAL ROOMBOOK
+===================================================== */
+:root {
+    --primary: #4e8cff;
+    --primary-dark: #2f6de0;
+    --danger: #ff5c6c;
+
+    --bg-light: #f5f7fb;
+    --card-light: #ffffff;
+
+    --bg-dark: #0f1115;
+    --card-dark: #161a20;
+
+    --text-muted: #8a94a6;
+}
+
+/* =====================================================
+   GERAL
+===================================================== */
+body {
+    background: radial-gradient(circle at top left, #f0f4ff, var(--bg-light));
+    font-family: "Inter", "Segoe UI", Tahoma, sans-serif;
+    letter-spacing: 0.2px;
+}
+
+/* =====================================================
+   NAVBAR / MARCA
+===================================================== */
+.navbar-brand {
+    font-weight: 600;
+    color: var(--primary) !important;
+    text-shadow: 0 0 20px rgba(78,140,255,.6);
+}
+
+/* =====================================================
+   CARDS DAS SALAS
+===================================================== */
+.sala-card {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    border: none;
+    border-radius: 18px;
+    background: linear-gradient(180deg, #ffffff, #f8faff);
+    box-shadow: 0 12px 28px rgba(0,0,0,.08);
+    transition: all .3s ease;
+}
+
+.sala-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(78,140,255,.15),
+        transparent
+    );
+    opacity: 0;
+    transition: opacity .3s ease;
+}
+
+.sala-card:hover::before {
+    opacity: 1;
+}
+
+.sala-card:hover {
+    transform: translateY(-8px) scale(1.03);
+    box-shadow: 0 22px 45px rgba(78,140,255,.25);
+}
+
+.sala-card h5 {
+    font-weight: 600;
+    color: var(--primary);
+}
+
+.sala-info,
+.sala-card p {
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+/* =====================================================
+   CALENDÁRIO
+===================================================== */
+.calendar-wrapper {
+    overflow-x: auto;
+    padding-bottom: 10px;
+}
+
+.calendar-grid {
+    min-width: 720px;
+    border-radius: 18px;
+    background: linear-gradient(180deg, #ffffff, #f9fbff);
+    padding: 18px;
+    box-shadow: 0 14px 35px rgba(0,0,0,.1);
+}
+
+/* =====================================================
+   SLOTS DE HORÁRIO
+===================================================== */
+.slot {
+    padding: 14px;
+    border-radius: 14px;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+    transition: all .25s ease;
+}
+
+/* DISPONÍVEL */
+.disponivel {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: #fff;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.25);
+}
+
+.disponivel:hover {
+    transform: translateY(-2px) scale(1.06);
+    box-shadow: 0 10px 25px rgba(78,140,255,.5);
+}
+
+/* OCUPADO */
+.ocupado {
+    background: linear-gradient(135deg, var(--danger), #ff8b95);
+    color: #fff;
+    cursor: not-allowed;
+    opacity: .9;
+}
+
+/* FEEDBACK */
+.slot:active {
+    transform: scale(.96);
+}
+
+/* =====================================================
+   BOTÕES
+===================================================== */
+.btn {
+    border-radius: 12px;
+    font-weight: 500;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    border: none;
+}
+
+.btn-primary:hover {
+    opacity: .9;
+}
+
+.btn-outline-danger {
+    border-radius: 12px;
+}
+
+/* =====================================================
+   MODAIS
+===================================================== */
+.modal-content {
+    border-radius: 18px;
+    border: none;
+}
+
+.modal-header,
+.modal-footer {
+    border: none;
+}
+
+/* =====================================================
+   MODO ESCURO
+===================================================== */
+body.dark {
+    background: radial-gradient(circle at top left, #161a20, var(--bg-dark));
+    color: #e9ecef;
+}
+
+body.dark .navbar {
+    background-color: #0d1117 !important;
+}
+
+body.dark .sala-card,
+body.dark .calendar-grid {
+    background: linear-gradient(180deg, #161a20, #1c212b);
+    box-shadow: 0 14px 35px rgba(0,0,0,.45);
+}
+
+body.dark .sala-card h5 {
+    color: #5a9bff;
+}
+
+body.dark .sala-info {
+    color: #adb5bd;
+}
+
+body.dark table {
+    color: #e9ecef;
+}
+
+body.dark .slot.disponivel {
+    background: linear-gradient(135deg, #5a9bff, #3c7bf0);
+}
+
+body.dark .slot.ocupado {
+    background: linear-gradient(135deg, #ff6b7d, #dc3545);
+}
+
+body.dark .btn-primary {
+    background: linear-gradient(135deg, #5a9bff, #3c7bf0);
+}
