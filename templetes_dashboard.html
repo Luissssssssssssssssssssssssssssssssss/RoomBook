@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>RoomBook | Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* ================== IDENTIDADE ================== */
+        :root {
+            --primary: #4e8cff;
+            --primary-dark: #2f6de0;
+            --danger: #ff5c6c;
+            --bg: #0f1115;
+            --card: #161a20;
+            --text: #e9ecef;
+            --muted: #adb5bd;
+        }
+
+        /* ================== GERAL ================== */
+        body {
+            background: linear-gradient(135deg, #0f1115, #161a20);
+            color: var(--text);
+            font-family: Inter, Segoe UI, sans-serif;
+        }
+
+        /* ================== NAVBAR ================== */
+        .navbar {
+            background: #0d1117 !important;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, .4);
+        }
+
+        .navbar-brand {
+            font-weight: 600;
+            color: var(--primary) !important;
+        }
+
+        /* ================== CARDS DE SALA ================== */
+        .sala-card {
+            background: linear-gradient(180deg, #1a1f27, #161a20);
+            border-radius: 18px;
+            padding: 18px;
+            cursor: pointer;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, .4);
+            transition: .3s;
+            height: 100%;
+        }
+
+        .sala-card:hover {
+            transform: translateY(-6px) scale(1.03);
+            box-shadow: 0 20px 45px rgba(78, 140, 255, .35);
+        }
+
+        .sala-card h5 {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .sala-info {
+            font-size: 14px;
+            color: var(--muted);
+        }
+
+        /* ================== TABELAS ================== */
+        .table {
+            color: var(--text);
+        }
+
+        .table thead {
+            background: #0d1117;
+        }
+
+        .table-bordered td, .table-bordered th {
+            border-color: #2a2f3a;
+        }
+
+        /* ================== AGENDA ================== */
+        .agenda-card {
+            background: #161a20;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, .45);
+        }
+
+        .slot {
+            padding: 12px;
+            border-radius: 14px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: .2s;
+        }
+
+        /* Disponível */
+        .disponivel {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .disponivel:hover {
+            transform: scale(1.06);
+            box-shadow: 0 8px 20px rgba(78, 140, 255, .5);
+        }
+
+        /* Ocupado */
+        .ocupado {
+            background: linear-gradient(135deg, var(--danger), #ff8b95);
+            color: #fff;
+            cursor: not-allowed;
+        }
+
+        /* Botão cancelar */
+        .slot button {
+            font-size: 12px;
+            padding: 2px 8px;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-dark px-3">
+    <span class="navbar-brand">🏢 RoomBook</span>
+    <div>
+        <span class="me-3">Usuário: {{ usuario }}</span>
+        <a href="{{ url_for('logout') }}" class="btn btn-outline-light btn-sm">Sair</a>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <h4 class="mb-3">📋 Reuniões Agendadas</h4>
+    <table class="table table-dark table-bordered text-center mb-5">
+        <thead>
+            <tr>
+                <th>Sala</th>
+                <th>Data</th>
+                <th>Horário</th>
+                <th>Organizador</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in reunioes %}
+            <tr>
+                <td>{{ r[0] }}</td>
+                <td>{{ r[1] }}</td>
+                <td>{{ r[2] }}</td>
+                <td>{{ r[3] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h4 class="mb-3">🏢 Reserva de Salas</h4>
+    <div class="row mb-4 g-3">
+        <div class="col-md-4">
+            <div class="sala-card" onclick="selecionarSala('Sala 1')">
+                <h5>Sala 1</h5>
+                <div class="sala-info"> ❄️ Ar-condicionado<br> 📽️ Projetor<br> 👥 50 pessoas </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="sala-card" onclick="selecionarSala('Sala 2')">
+                <h5>Sala 2</h5>
+                <div class="sala-info"> 📺 TV<br> 👥 20 pessoas </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="sala-card" onclick="selecionarSala('Sala 3')">
+                <h5>Sala 3</h5>
+                <div class="sala-info"> ❄️ Ar + 📽️ Projetor<br> 👥 80 pessoas </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="agenda-card">
+        <h5>Sala selecionada: <span id="salaSelecionada" class="text-primary">Nenhuma</span> </h5>
+        <table class="table table-dark table-bordered text-center mt-3">
+            <thead>
+                <tr>
+                    <th>Hora</th>
+                    {% for d in ["Seg","Ter","Qua","Qui","Sex"] %}
+                    <th>{{ d }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for h in [ "06:00","07:00","08:00","09:00","10:00","11:00","12:00", "13:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00" ] %}
+                <tr>
+                    <td>{{ h }}</td>
+                    {% for d in ["Seg","Ter","Qua","Qui","Sex"] %}
+                    <td>
+                        <div class="slot disponivel" data-dia="{{ d }}" data-hora="{{ h }}"> Livre </div>
+                    </td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    // ================= DADOS GLOBAIS =================
+    let salaAtual = null;
+    const isAdmin = "{{ usuario }}" === "admin";
+    
+    const reunioes = [
+        {% for r in reunioes %}
+        { sala: "{{ r[0] }}", data: "{{ r[1] }}", horario: "{{ r[2] }}" },
+        {% endfor %}
+    ];
+
+    // ================= FUNÇÕES DE ESTADO =================
+    function selecionarSala(sala) {
+        salaAtual = sala;
+        document.getElementById("salaSelecionada").innerText = sala;
+        atualizarAgenda();
+    }
+
+    // ================= CÁLCULO DE DATA =================
+    function calcularData(dia) {
+        const mapa = { Seg: 1, Ter: 2, Qua: 3, Qui: 4, Sex: 5 };
+        const hoje = new Date();
+        // Lógica de compensação para pegar a data correta da semana atual
+        const diff = (mapa[dia] + 7 - hoje.getDay()) % 7;
+        const d = new Date(hoje);
+        d.setDate(hoje.getDate() + diff);
+        return d.toISOString().split("T")[0];
+    }
+
+    // ================= ATUALIZAÇÃO DA INTERFACE =================
+    function atualizarAgenda() {
+        if (!salaAtual) return;
+
+        document.querySelectorAll(".slot").forEach(slot => {
+            const data = calcularData(slot.dataset.dia);
+            const hora = slot.dataset.hora;
+
+            // Resetar slot para estado livre
+            slot.className = "slot disponivel";
+            slot.innerText = "Livre";
+            slot.onclick = () => reservar(slot);
+
+            // Verificar se existe reunião para este slot
+            const r = reunioes.find(x =>
+                x.sala === salaAtual &&
+                x.data === data &&
+                x.horario === hora
+            );
+
+            if (r) {
+                slot.className = "slot ocupado";
+                slot.onclick = null;
+
+                if (isAdmin) {
+                    slot.innerHTML = `Ocupado<br>
+                    <button class="btn btn-sm btn-light mt-1" 
+                    onclick="cancelarReserva('${r.sala}','${r.data}','${r.horario}')">
+                    Cancelar</button>`;
+                } else {
+                    slot.innerText = "Ocupado";
+                }
+            }
+        });
+    }
+
+    // ================= AÇÕES (FETCH) =================
+    function reservar(slot) {
+        if (!salaAtual) return alert("Selecione uma sala");
+
+        const dataReserva = calcularData(slot.dataset.dia);
+        const horaReserva = slot.dataset.hora;
+
+        const fd = new FormData();
+        fd.append("sala", salaAtual);
+        fd.append("data", dataReserva);
+        fd.append("horario", horaReserva);
+
+        fetch("/agendar", { method: "POST", body: fd })
+            .then(r => {
+                if (r.ok) {
+                    location.reload();
+                } else {
+                    alert("Erro ao agendar ou horário já ocupado.");
+                }
+            });
+    }
+
+    function cancelarReserva(sala, data, horario) {
+        if (!confirm("Deseja realmente cancelar esta reserva?")) return;
+
+        const fd = new FormData();
+        fd.append("sala", sala);
+        fd.append("data", data);
+        fd.append("horario", horario);
+
+        fetch("/cancelar", { method: "POST", body: fd })
+            .then(() => location.reload());
+    }
+</script>
+</body>
+</html>
